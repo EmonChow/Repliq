@@ -9,14 +9,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-# from commons.pagination import Pagination
+from commons.pagination import Pagination
 
 
 
 from django.utils.translation import gettext_lazy as _
 
-from company_web.company.models import EmployeeDeviceLog
-from company_web.company.serializers import EmployeeDeviceLogSerializer
+from company.models import EmployeeDeviceLog
+from company.serializers import EmployeeDeviceLogSerializer
 
 
 @extend_schema(
@@ -38,18 +38,18 @@ def getAllEmployeeSDeviceLog(request):
     size = request.query_params.get('size')
 
     # Pagination
-    # pagination = Pagination()
-    # pagination.page = page
-    # pagination.size = size
-    # company_device = pagination.paginate_data(company_device)
+    pagination = Pagination()
+    pagination.page = page
+    pagination.size = size
+    company_device = pagination.paginate_data(company_device)
 
     serializer = EmployeeDeviceLogSerializer(employee_device_log, many=True)
 
     response = {
         'employee_device_log': serializer.data,
-        # 'page': pagination.page,
-        # 'size': pagination.size,
-        # 'total_pages': pagination.total_pages,
+        'page': pagination.page,
+        'size': pagination.size,
+        'total_pages': pagination.total_pages,
         'total_elements': total_elements,
     }
 

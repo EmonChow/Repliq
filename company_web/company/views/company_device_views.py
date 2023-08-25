@@ -1,6 +1,6 @@
 
 from django.core.exceptions import ObjectDoesNotExist
-
+# from commons.pagination import Pagination
 from company.models import CompanyDevice
 from company.serializers import CompanyDeviceSerializer
 
@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-# from commons.pagination import Pagination
+from commons.pagination import Pagination
 
 
 
@@ -25,8 +25,6 @@ from django.utils.translation import gettext_lazy as _
     responses=CompanyDeviceSerializer
 )
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.PAYMENT_METHOD_LIST.name])
 def getAllCompanyDevice(request):
     company_device = CompanyDevice.objects.all()
     total_elements = company_device.count()
@@ -35,18 +33,18 @@ def getAllCompanyDevice(request):
     size = request.query_params.get('size')
 
     # Pagination
-    # pagination = Pagination()
-    # pagination.page = page
-    # pagination.size = size
-    # company_device = pagination.paginate_data(company_device)
+    pagination = Pagination()
+    pagination.page = page
+    pagination.size = size
+    company_device = pagination.paginate_data(company_device)
 
     serializer = CompanyDeviceSerializer(company_device, many=True)
 
     response = {
         'company_device': serializer.data,
-        # 'page': pagination.page,
-        # 'size': pagination.size,
-        # 'total_pages': pagination.total_pages,
+        'page': pagination.page,
+        'size': pagination.size,
+        'total_pages': pagination.total_pages,
         'total_elements': total_elements,
     }
 
@@ -55,8 +53,6 @@ def getAllCompanyDevice(request):
 
 @extend_schema(request=CompanyDeviceSerializer, responses=CompanyDeviceSerializer)
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.ATTRIBUTE_LIST.name])
 def getAllCompanyDeviceWithoutPagination(request):
     company_devices = CompanyDevice.objects.all()
     serializer = CompanyDeviceSerializer(company_devices, many=True)
@@ -71,8 +67,6 @@ def getAllCompanyDeviceWithoutPagination(request):
 
 @extend_schema(request=CompanyDeviceSerializer, responses=CompanyDeviceSerializer)
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.PAYMENT_METHOD_DETAILS.name])
 def getACompanyDevice(request, pk):
     try:
         company = CompanyDevice.objects.get(pk=pk)
@@ -85,7 +79,6 @@ def getACompanyDevice(request, pk):
 @extend_schema(request=CompanyDeviceSerializer, responses=CompanyDeviceSerializer)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.ATTRIBUTE_CREATE.name])
 def createCompanyDevice(request):
     data = request.data
     filtered_data = {}
@@ -106,7 +99,6 @@ def createCompanyDevice(request):
 @extend_schema(request=CompanyDeviceSerializer, responses=CompanyDeviceSerializer)
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.ATTRIBUTE_UPDATE.name])
 def updateCompanyDevice(request, pk):
     data = request.data
     filtered_data = {}
@@ -131,7 +123,6 @@ def updateCompanyDevice(request, pk):
 @extend_schema(request=CompanyDeviceSerializer, responses=CompanyDeviceSerializer)
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-# @has_permissions([PermissionEnum.PAYMENT_METHOD_DELETE.name])
 def deleteCompanyDevice(request, pk):
     try:
         company_device = CompanyDevice.objects.get(pk=pk)

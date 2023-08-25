@@ -11,13 +11,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
-
-
-
 from django.utils.translation import gettext_lazy as _
 
-from company_web.company.models import Employee
-from company_web.company.serializers import EmployeeSerializer
+from company.models import Employee
+from company.serializers import EmployeeSerializer
 
 
 @extend_schema(

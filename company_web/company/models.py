@@ -52,8 +52,8 @@ class Employee(models.Model):
 class EmployeeDevice(models.Model):
     company = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="device")
     employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    device = models.OneToOneField(CompanyDevice, on_delete=models.CASCADE, null=True, blank=True,
-                                  )
+    device = models.OneToOneField(CompanyDevice, on_delete=models.CASCADE, null=True, blank=True)
+    condition = models.CharField(max_length=100, null=True, blank=True)                         
     checked_out = models.DateTimeField(auto_now_add=True)
     returned = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -75,6 +75,12 @@ class EmployeeDeviceLog(models.Model):
     log = models.CharField(max_length=255)
     employee_device = models.ForeignKey(EmployeeDevice, on_delete=models.CASCADE, null=True, blank=True, related_name="employee_deevicelog_device")
     date_created = models.DateTimeField(auto_now_add=True)
+    checked_out_by = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='checked_out_logs',null=True, blank=True,)
+    checked_in_by = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='checked_in_logs',null=True, blank=True,)
+    checkout_date = models.DateTimeField(null=True, blank=True,)
+    checkin_date = models.DateTimeField(null=True, blank=True,)
+    condition_when_checked_out = models.CharField(max_length=100,null=True, blank=True,)
+    condition_when_checked_in = models.CharField(max_length=100,null=True, blank=True,)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
